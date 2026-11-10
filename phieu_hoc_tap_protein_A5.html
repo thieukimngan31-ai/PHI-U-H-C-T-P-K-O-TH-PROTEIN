@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phiếu học tập số 1 - Phân loại protein</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Nunito:wght@500;600;700;800&display=swap');
+:root{
+ --blue:#2365CF;--pink:#E94291;--ink:#283C4F;--paper:#fff;--line:#C9DCE6;
+ --mint:#ECFCF4;--mint-head:#BBF4D3;--rose:#FFF2F5;--rose-head:#FFCDD1;
+ --correct:#DFF9E7;--correct-line:#5AB579;--wrong:#FFE4EA;--wrong-line:#EA7695;
+ --pastels:#E2F0FF,#DEF9E6,#FFF0D7,#F0E5FF,#FFF8CB,#DBF9F8,#FFE3ED;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:22px 12px 30px;background:linear-gradient(135deg,#e6f8f5,#fdf5dc);font-family:"Be Vietnam Pro",Nunito,"Segoe UI",Arial,sans-serif;color:var(--ink)}
+.app{max-width:770px;margin:auto}
+.sheet{width:100%;min-height:900px;background:#fff;border-radius:23px;box-shadow:0 12px 35px #34566a1a;padding:25px 30px 22px;position:relative;overflow:hidden}
+.topline{text-align:center;color:#174d57;font-weight:800;letter-spacing:.5px;font-size:25px;margin:0 0 5px}
+h1{text-align:center;font-size:21px;line-height:1.35;margin:0 0 13px;color:#174d57}
+.subtitle{text-align:center;font-weight:700;color:var(--blue);font-size:14px;margin-bottom:13px}
+.student{display:flex;gap:18px;align-items:center;justify-content:center;margin:0 auto 15px;max-width:590px;font-size:12px}
+.student label{display:flex;align-items:center;gap:6px;flex:1;white-space:nowrap}
+.student input{width:100%;min-width:0;border:0;border-bottom:1px dashed #9bb6c5;padding:5px 3px;font:inherit;outline:none;color:var(--ink);background:transparent}
+.mission{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#ffe8ef;border:1px solid #ffd0df;border-radius:12px;padding:10px 14px;margin-bottom:13px}
+.mission strong{color:#b82f69;font-size:13px;letter-spacing:.4px}
+.mission span{font-size:11px;color:#5e5260;text-align:right}
+.bank{border:1.8px dashed #a9bdc8;border-radius:13px;padding:12px 13px 13px;margin-bottom:17px;background:#fcfeff}
+.section-label{text-align:center;font-size:12px;font-weight:800;color:#527080;letter-spacing:.6px;margin-bottom:10px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.card{border:1.8px solid #c9dce6;border-radius:10px;padding:9px 10px;min-height:57px;display:flex;gap:8px;align-items:center;cursor:grab;box-shadow:0 2px 5px #2e52600c;font-size:12px;line-height:1.45;transition:.15s;user-select:none;touch-action:manipulation}
+.card:nth-child(7n+1){background:#E2F0FF}.card:nth-child(7n+2){background:#DEF9E6}.card:nth-child(7n+3){background:#FFF0D7}.card:nth-child(7n+4){background:#F0E5FF}.card:nth-child(7n+5){background:#FFF8CB}.card:nth-child(7n+6){background:#DBF9F8}.card:nth-child(7n){background:#FFE3ED}
+.card b{font-size:14px;flex:0 0 auto;color:#31546a}
+.card.selected{outline:3px solid #6b9fda;transform:translateY(-2px)}
+.card.dragging{opacity:.45}
+.card.placed{cursor:pointer}
+.card.correct{background:var(--correct)!important;border-color:var(--correct-line);border-style:solid}
+.card.wrong{background:var(--wrong)!important;border-color:var(--wrong-line);border-style:solid}
+.groups{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.group{border:1.8px dashed #76a99a;border-radius:12px;padding:13px 11px 12px;min-height:230px;position:relative;background:var(--mint)}
+.group.globular{background:var(--rose);border-color:#d99aa7}
+.group h2{font-size:16px;text-align:center;margin:-23px auto 12px;width:max-content;max-width:100%;padding:7px 14px;border-radius:9px;background:var(--mint-head);color:#176047}
+.group.globular h2{background:var(--rose-head);color:#9d3452}
+.slots{display:grid;gap:7px}
+.slot{min-height:39px;border:2px dashed #9bb9ae;border-radius:9px;background:#ffffffc9;display:flex;align-items:center;padding:5px 7px;gap:7px;font-size:11px;transition:.15s}
+.globular .slot{border-color:#d6a8b2}
+.slot .num{font-weight:800;color:#78918c;min-width:17px}
+.slot .hint{color:#91a1a8;font-style:italic}
+.slot.over{background:#e3f5ff;border-color:#4c91cf}
+.slot.filled{border-style:solid;border-color:#b8d5c8}
+.globular .slot.filled{border-color:#e4b9c4}
+.slot .card{min-height:0;flex:1;padding:5px 7px;font-size:10.5px;box-shadow:none}
+.slot .card b{font-size:11px}
+.slot .remove{margin-left:auto;border:0;background:transparent;color:#71838c;font-size:15px;cursor:pointer;padding:0 3px}
+.footer{margin-top:17px;border-top:1.5px dashed #b9cbd4;padding-top:9px;text-align:center;font-size:10px;color:#718693;line-height:1.7}
+.footer strong{color:#456879}
+.controls{max-width:770px;margin:15px auto 0;background:#ffffffed;border:1px solid #d8e5eb;border-radius:15px;padding:13px 15px;box-shadow:0 7px 20px #34566a12}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+button{font-family:inherit;font-weight:700;border:0;border-radius:9px;padding:9px 13px;cursor:pointer;font-size:12px;transition:.15s}
+button:active{transform:scale(.97)}
+.primary{background:#2365CF;color:#fff}.secondary{background:#eaf2fb;color:#315c8a}.pinkbtn{background:#ffe5ee;color:#a93662}.greenbtn{background:#def8e7;color:#216641}
+.stats{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;font-size:12px;font-weight:700;color:#456273}
+.progress{height:8px;background:#e8eff3;border-radius:20px;overflow:hidden;margin-top:7px}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,#63c995,#69a8ed);border-radius:20px;transition:width .2s}
+.feedback{text-align:center;font-size:12px;font-weight:700;min-height:19px;margin-top:8px;color:#456273}
+@media(max-width:560px){
+ body{padding:10px 7px 20px}.sheet{padding:18px 13px;min-height:0;border-radius:16px}
+ .topline{font-size:21px}h1{font-size:17px}.student{gap:9px;font-size:10px}
+ .mission{align-items:flex-start;flex-direction:column;gap:3px}.mission span{text-align:left}
+ .cards{grid-template-columns:1fr}.card{min-height:48px}
+ .groups{gap:9px}.group{padding:12px 7px 9px;min-height:220px}.group h2{font-size:13px;padding:6px 8px}
+ .slot{padding:4px;gap:3px}.slot .card{font-size:9px;padding:4px}.slot .hint{font-size:9px}
+}
+@page{size:A5 portrait;margin:0}
+@media print{
+ body{padding:0;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .app{max-width:none;width:148mm;margin:0}
+ .sheet{width:148mm;height:210mm;min-height:210mm;border-radius:0;box-shadow:none;padding:7mm 7mm 5mm;overflow:hidden}
+ .topline{font-size:17pt;margin-bottom:2mm}h1{font-size:13pt;margin-bottom:2mm}
+ .subtitle{font-size:8pt;margin-bottom:2mm}
+ .student{font-size:7pt;margin-bottom:3mm}
+ .mission{padding:2mm 3mm;margin-bottom:2.5mm}.mission strong{font-size:8pt}.mission span{font-size:6.5pt}
+ .bank{padding:2.5mm;margin-bottom:4mm}.section-label{font-size:7pt;margin-bottom:2mm}
+ .cards{gap:2mm}.card{font-size:7pt;min-height:13mm;padding:1.5mm 2mm;box-shadow:none;break-inside:avoid}
+ .card b{font-size:8pt}
+ .groups{gap:3mm}.group{min-height:69mm;padding:4mm 2mm 2mm}.group h2{font-size:10pt;margin-top:-7mm;margin-bottom:3mm}
+ .slots{gap:2mm}.slot{min-height:11mm;font-size:6.5pt;padding:1mm}
+ .slot .card{font-size:6pt;padding:1mm}.slot .remove{display:none}
+ .footer{margin-top:4mm;padding-top:2mm;font-size:6.5pt}
+ .controls{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+ <main class="sheet">
+  <header>
+   <div class="topline">PHIẾU HỌC TẬP SỐ 1</div>
+   <h1>PHÂN LOẠI PROTEIN</h1>
+   <div class="subtitle">Chủ đề: Cấu trúc và tính chất của protein</div>
+   <div class="student">
+    <label>Họ và tên: <input aria-label="Họ và tên" type="text"></label>
+    <label style="max-width:125px">Lớp: <input aria-label="Lớp" type="text"></label>
+   </div>
+  </header>
+  <section class="mission">
+   <strong>🎯 NHIỆM VỤ: NHẬN BIẾT – PHÂN LOẠI</strong>
+   <span>Kéo thả (hoặc nhấp chọn thẻ rồi nhấp ô tương ứng).</span>
+  </section>
+  <section class="bank" aria-label="Ngân hàng thẻ">
+   <div class="section-label">NGÂN HÀNG THẺ KIẾN THỨC</div>
+   <div class="cards" id="bank">
+    <div class="card" draggable="true" data-id="1" data-group="fiber"><b>1.</b><span>Keratin (có trong tóc, móng, sừng)</span></div>
+    <div class="card" draggable="true" data-id="2" data-group="globular"><b>2.</b><span>Hemoglobin (có trong máu)</span></div>
+    <div class="card" draggable="true" data-id="3" data-group="fiber"><b>3.</b><span>Không tan trong nước cũng như trong các dung môi thông thường</span></div>
+    <div class="card" draggable="true" data-id="4" data-group="fiber"><b>4.</b><span>Collagen (có ở da, sụn)</span></div>
+    <div class="card" draggable="true" data-id="5" data-group="globular"><b>5.</b><span>Có thể tan được trong nước tạo dung dịch keo</span></div>
+    <div class="card" draggable="true" data-id="6" data-group="fiber"><b>6.</b><span>Myosin (có ở cơ bắp)</span></div>
+    <div class="card" draggable="true" data-id="7" data-group="globular"><b>7.</b><span>Albumin (có trong lòng trắng trứng)</span></div>
+   </div>
+  </section>
+  <section class="groups">
+   <div class="group" data-target="fiber">
+    <h2>Protein hình sợi</h2>
+    <div class="slots">
+     <div class="slot" data-group="fiber"><span class="num">1.</span><span class="hint">Thả thẻ vào đây</span></div>
+     <div class="slot" data-group="fiber"><span class="num">2.</span><span class="hint">Thả thẻ vào đây</span></div>
+     <div class="slot" data-group="fiber"><span class="num">3.</span><span class="hint">Thả thẻ vào đây</span></div>
+     <div class="slot" data-group="fiber"><span class="num">4.</span><span class="hint">Thả thẻ vào đây</span></div>
+    </div>
+   </div>
+   <div class="group globular" data-target="globular">
+    <h2>Protein hình cầu</h2>
+    <div class="slots">
+     <div class="slot" data-group="globular"><span class="num">1.</span><span class="hint">Thả thẻ vào đây</span></div>
+     <div class="slot" data-group="globular"><span class="num">2.</span><span class="hint">Thả thẻ vào đây</span></div>
+     <div class="slot" data-group="globular"><span class="num">3.</span><span class="hint">Thả thẻ vào đây</span></div>
+    </div>
+   </div>
+  </section>
+  <footer class="footer">
+   <strong>MÔN HÓA HỌC 12</strong> · CHỦ ĐỀ: PROTEIN<br>
+   Học tập tích cực – Tư duy khoa học – Chinh phục tri thức!
+  </footer>
+ </main>
+ <section class="controls" aria-label="Thanh điều khiển">
+  <div class="btnrow">
+   <button class="primary" id="check">✓ Kiểm tra</button>
+   <button class="secondary" id="reset">↺ Làm lại</button>
+   <button class="pinkbtn" id="answer">◎ Xem đáp án</button>
+   <button class="secondary" id="shuffle">⤨ Trộn thẻ</button>
+   <button class="greenbtn" id="print">▤ In A5</button>
+  </div>
+  <div class="stats"><span id="placed">Đã xếp 0/7</span><span id="score">Đúng 0/7</span></div>
+  <div class="progress"><div id="bar"></div></div>
+  <div class="feedback" id="feedback" aria-live="polite">Hãy phân loại đủ 7 thẻ để hoàn thành nhiệm vụ nhé!</div>
+ </section>
+</div>
+<script>
+(()=>{
+ const bank=document.getElementById('bank'), slots=[...document.querySelectorAll('.slot')];
+ let selected=null, checked=false;
+ const cards=()=>[...document.querySelectorAll('.card')];
+ function count(){
+  const n=slots.filter(s=>s.querySelector('.card')).length;
+  document.getElementById('placed').textContent=`Đã xếp ${n}/7`;
+  document.getElementById('bar').style.width=(n/7*100)+'%';
+  return n;
+ }
+ function clearMarks(){
+  checked=false;
+  cards().forEach(c=>c.classList.remove('correct','wrong'));
+  document.getElementById('score').textContent='Đúng 0/7';
+  document.getElementById('feedback').textContent='Bạn có thể tiếp tục sắp xếp hoặc nhấn Kiểm tra.';
+ }
+ function place(card,slot){
+  if(!card||!slot)return;
+  const occupied=slot.querySelector('.card');
+  if(occupied && occupied!==card){bank.appendChild(occupied);occupied.classList.remove('placed');}
+  if(card.parentElement.classList.contains('slot')) {
+   const old=card.parentElement;
+   old.innerHTML=`<span class="num">${[...old.parentElement.children].indexOf(old)+1}.</span><span class="hint">Thả thẻ vào đây</span>`;
+  }
+  slot.innerHTML='';
+  slot.appendChild(card);
+  card.classList.add('placed');card.classList.remove('selected');
+  selected=null;clearMarks();count();
+ }
+ cards().forEach(card=>{
+  card.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',card.dataset.id);e.dataTransfer.effectAllowed='move';card.classList.add('dragging');});
+  card.addEventListener('dragend',()=>card.classList.remove('dragging'));
+  card.addEventListener('click',()=>{
+   if(selected===card){card.classList.remove('selected');selected=null;return;}
+   cards().forEach(c=>c.classList.remove('selected'));selected=card;card.classList.add('selected');
+   document.getElementById('feedback').textContent='Đã chọn thẻ '+card.dataset.id+'. Hãy chạm vào ô nhóm muốn xếp.';
+  });
+ });
+ slots.forEach(slot=>{
+  slot.addEventListener('dragover',e=>{e.preventDefault();slot.classList.add('over');});
+  slot.addEventListener('dragleave',()=>slot.classList.remove('over'));
+  slot.addEventListener('drop',e=>{e.preventDefault();slot.classList.remove('over');const id=e.dataTransfer.getData('text/plain');const card=cards().find(c=>c.dataset.id===id);place(card,slot);});
+  slot.addEventListener('click',()=>{if(selected)place(selected,slot);});
+ });
+ bank.addEventListener('dragover',e=>e.preventDefault());
+ bank.addEventListener('drop',e=>{
+  e.preventDefault();const id=e.dataTransfer.getData('text/plain');const card=cards().find(c=>c.dataset.id===id);
+  if(card){bank.appendChild(card);card.classList.remove('placed');clearMarks();count();}
+ });
+ document.getElementById('check').addEventListener('click',()=>{
+  const n=count();let correct=0;
+  slots.forEach(slot=>{
+   const card=slot.querySelector('.card');if(!card)return;
+   const ok=card.dataset.group===slot.dataset.group;
+   card.classList.toggle('correct',ok);card.classList.toggle('wrong',!ok);if(ok)correct++;
+  });
+  checked=true;document.getElementById('score').textContent=`Đúng ${correct}/7`;
+  document.getElementById('feedback').textContent=n<7?`Bạn đã xếp ${n}/7 thẻ. Hãy xếp đủ để có kết quả đầy đủ.`:
+   correct===7?'🎉 Xuất sắc! Bạn đã phân loại chính xác tất cả protein.':`Bạn làm đúng ${correct}/7. Thẻ màu hồng là thẻ cần xem lại.`;
+ });
+ document.getElementById('reset').addEventListener('click',()=>{
+  cards().forEach(c=>{c.classList.remove('placed','selected','correct','wrong');bank.appendChild(c);});
+  slots.forEach((s,i)=>s.innerHTML=`<span class="num">${[...s.parentElement.children].indexOf(s)+1}.</span><span class="hint">Thả thẻ vào đây</span>`);
+  selected=null;clearMarks();count();document.getElementById('feedback').textContent='Đã làm mới phiếu. Hãy bắt đầu lại nhé!';
+ });
+ document.getElementById('answer').addEventListener('click',()=>{
+  slots.forEach(s=>{const target=s.dataset.group;const c=cards().find(x=>x.dataset.group===target&&!x.parentElement.classList.contains('slot'));if(c)place(c,s);});
+  document.getElementById('check').click();
+  document.getElementById('feedback').textContent='Đáp án đã được điền: Hình sợi gồm 1, 3, 4, 6; hình cầu gồm 2, 5, 7.';
+ });
+ document.getElementById('shuffle').addEventListener('click',()=>{
+  const arr=cards().sort(()=>Math.random()-.5);arr.forEach(c=>{c.classList.remove('placed','selected','correct','wrong');bank.appendChild(c);});
+  slots.forEach((s,i)=>s.innerHTML=`<span class="num">${[...s.parentElement.children].indexOf(s)+1}.</span><span class="hint">Thả thẻ vào đây</span>`);
+  selected=null;clearMarks();count();document.getElementById('feedback').textContent='Đã trộn thẻ ngẫu nhiên. Hãy phân loại lại!';
+ });
+ document.getElementById('print').addEventListener('click',()=>window.print());
+ count();
+})();
+</script>
+</body>
+</html>
